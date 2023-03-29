@@ -1,7 +1,5 @@
 - hosts: all
-  become_user: root
-  become: yes
-  task:
+  tasks:
   - name: Disable Swap
     command: swapoff -all
 	
