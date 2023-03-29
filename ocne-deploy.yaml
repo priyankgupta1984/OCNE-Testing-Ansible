@@ -1,0 +1,39 @@
+- hosts: master:worker_grp
+  become_user: root
+  become: yes
+  task:
+  
+  - name: install olnce release package
+    yum:
+      name: oracle-olcne-release-el8
+	  state: latest
+  
+  - name: Enable the current Oracle Cloud Native Environment repository
+    yum:
+	  enablerepo: "{{ erepos }}"
+	vars:
+      erepos:
+       - ol8_olcne15
+	   - ol8_addons
+	   - ol8_baseos_latest
+	   - ol8_appstream
+	   - ol8_UEKR6
+	  
+  - name: Disable all previous repository versions.
+    yum:
+	  disablerepo: "{{ drepos}}"
+	vars:
+      drepos:
+       - ol8_olcne12
+       - ol8_olcne13
+	   - ol8_olcne14
+	   - ol8_developer
+       
+  - name: Install and Enable Chrony
+    yum:
+      name: chrony
+      state: latest
+    systemd:
+        name: chronyd
+        state: started
+        enabled: yes
